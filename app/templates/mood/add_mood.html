@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Add Transaction{% endblock %}
+{% block content %}
+<h1 class="my-4">Add New Transaction</h1>
+<form method="POST" action="{{ url_for('mood.add_mood') }}">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        {{ form.title.label(class="form-control-label") }}
+        {{ form.title(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.amount.label(class="form-control-label") }}
+        {{ form.amount(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.type.label(class="form-control-label") }}
+        {{ form.type(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+</form>
+{% endblock %}

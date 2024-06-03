@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Fitness Tracker{% endblock %}
+{% block content %}
+<h1 class="my-4">Fitness Tracker</h1>
+<a href="{{ url_for('fitness.add_workout') }}" class="btn btn-primary mb-4">Add Workout</a>
+<ul class="list-group">
+    {% for workout in workouts %}
+        <li class="list-group-item">
+            <strong>{{ workout.title }}</strong> - {{ workout.date.strftime('%Y-%m-%d %H:%M:%S') }}
+            <p>{{ workout.description }}</p>
+            <p>Duration: {{ workout.duration }} minutes</p>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

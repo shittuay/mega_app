@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Mood Tracker{% endblock %}
+{% block content %}
+<h1 class="my-4">Mood Tracker</h1>
+<a href="{{ url_for('mood.add_mood') }}" class="btn btn-primary mb-4">Add Mood</a>
+<ul class="list-group">
+    {% for mood in moods %}
+        <li class="list-group-item">
+            <strong>{{ mood.title }}</strong> - {{ mood.date.strftime('%Y-%m-%d %H:%M:%S') }} - {{ mood.description }}
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

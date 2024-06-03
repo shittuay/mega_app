@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Motivational Quotes{% endblock %}
+{% block content %}
+<h1 class="my-4">Motivational Quotes</h1>
+<a href="{{ url_for('motivational.add_quote') }}" class="btn btn-primary mb-4">Add Quote</a>
+<ul class="list-group">
+    {% for quote in quotes %}
+        <li class="list-group-item">
+            <blockquote class="blockquote">
+                <p class="mb-0">{{ quote.content }}</p>
+                <footer class="blockquote-footer">{{ quote.author }} on {{ quote.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}</footer>
+            </blockquote>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

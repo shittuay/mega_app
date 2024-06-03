@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Budget Tracker{% endblock %}
+{% block content %}
+<h1 class="my-4">Budget Tracker</h1>
+<a href="{{ url_for('budget.add_transaction') }}" class="btn btn-primary mb-4">Add Transaction</a>
+<ul class="list-group">
+    {% for transaction in transactions %}
+        <li class="list-group-item">
+            <strong>{{ transaction.title }}</strong> - {{ transaction.type }} - ${{ transaction.amount }} - {{ transaction.date.strftime('%Y-%m-%d %H:%M:%S') }}
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

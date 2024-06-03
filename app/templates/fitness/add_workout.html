@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Add Workout{% endblock %}
+{% block content %}
+<h1 class="my-4">Add New Workout</h1>
+<form method="POST" action="{{ url_for('fitness.add_workout') }}">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        {{ form.title.label(class="form-control-label") }}
+        {{ form.title(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.description.label(class="form-control-label") }}
+        {{ form.description(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.duration.label(class="form-control-label") }}
+        {{ form.duration(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+</form>
+{% endblock %}

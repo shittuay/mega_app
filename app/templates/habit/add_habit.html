@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Add Habit{% endblock %}
+{% block content %}
+<h1 class="my-4">Add New Habit</h1>
+<form method="POST" action="{{ url_for('habit.add_habit') }}">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        {{ form.name.label(class="form-control-label") }}
+        {{ form.name(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.description.label(class="form-control-label") }}
+        {{ form.description(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Add Motivational Quote{% endblock %}
+{% block content %}
+<h1 class="my-4">Add New Motivational Quote</h1>
+<form method="POST" action="{{ url_for('motivational.add_quote') }}">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        {{ form.content.label(class="form-control-label") }}
+        {{ form.content(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.author.label(class="form-control-label") }}
+        {{ form.author(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+</form>
+{% endblock %}

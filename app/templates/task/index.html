@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Task Manager{% endblock %}
+{% block content %}
+<h1 class="my-4">Task Manager</h1>
+<a href="{{ url_for('task.add_task') }}" class="btn btn-primary mb-4">Add Task</a>
+<ul class="list-group">
+    {% for task in tasks %}
+        <li class="list-group-item">
+            <a href="{{ url_for('task.task_detail', task_id=task.id) }}">{{ task.title }}</a>
+            <p>Due: {{ task.due_date.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+            <p>{{ 'Completed' if task.completed else 'Not Completed' }}</p>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

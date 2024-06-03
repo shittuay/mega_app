@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Coding Journal{% endblock %}
+{% block content %}
+<h1 class="my-4">Coding Journal</h1>
+<a href="{{ url_for('coding.add_entry') }}" class="btn btn-primary mb-4">Add Entry</a>
+<ul class="list-group">
+    {% for entry in entries %}
+        <li class="list-group-item">
+            <strong>{{ entry.title }}</strong> - {{ entry.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}
+            <p>{{ entry.content }}</p>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
