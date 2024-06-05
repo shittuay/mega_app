@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mega App{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                <li><a href="{{ url_for('main.budget') }}">Budget Tracker</a></li>
+                <li><a href="{{ url_for('main.habit') }}">Habit Tracker</a></li>
+                <li><a href="{{ url_for('main.task') }}">Task Manager</a></li>
+                <li><a href="{{ url_for('main.fitness') }}">Fitness Tracker</a></li>
+                <li><a href="{{ url_for('main.mood') }}">Mood Journal</a></li>
+                <li><a href="{{ url_for('main.coding') }}">Coding Journal</a></li>
+                <li><a href="{{ url_for('main.community') }}">Community Board</a></li>
+                <li><a href="{{ url_for('main.motivational') }}">Motivational App</a></li>
+                <li><a href="{{ url_for('main.weather') }}">Weather App</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2024 Mega App</p>
+    </footer>
+</body>
+</html>
