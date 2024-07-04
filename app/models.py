@@ -1,117 +1,54 @@
-from datetime import datetime
-from app import db
+from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
+from flask_migrate import Migrate, init, migrate as migrate_command, upgrade
+from config import Config
+import os
 
-class BudgetTransaction(db.Model):
-    __tablename__ = 'BudgetTransaction'
-    __table_args__ = {'extend_existing=True'}
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    amount = db.Column(db.Float, nullable=False)
-    type = db.Column(db.String(10), nullable=False)
-    date = db.Column(db.DateTime, default=datetime.utcnow)
+db = SQLAlchemy()
+login_manager = LoginManager()
 
-class Task(db.Model):
-    __tablename__ = 'Task'
-    __table_args__ = {'extend_existing=True'}
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.String(200), nullable=True)
-    due_date = db.Column(db.DateTime, nullable=False)
-    completed = db.Column(db.Boolean, default=False)
-
-    def __repr__(self):
-        return f"Task('{self.title}', '{self.due_date}', '{self.completed}')"
-
-class Workout(db.Model):
-    __tablename__ = 'workout'
-    __table_args__ = {'extend_existing=True'}
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.String(200), nullable=True)
-    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    duration = db.Column(db.Integer, nullable=False)
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
     
-class Mood(db.Model):
-    __tablename__ = 'Mood'
-    __table_args__ = {'extend_existing=True'}
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.String(200), nullable=True)
-    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    db.init_app(app)
+    migrate = Migrate(app, db)
+    login_manager.init_app(app)
 
-    def __repr__(self):
-        return f"Mood('{self.title}', '{self.date}')"
-    
-class CodingEntry(db.Model):
-    __tablename__ = 'CodingEntry'
-    __table_args__ = {'extend_existing=True'}
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    login_manager.login_view = 'auth.login'
+    login_manager.login_message_category = 'info'
 
-    def __repr__(self):
-        return f"CodingEntry('{self.title}', '{self.date_posted}')"
-    
-class CommunityPost(db.Model):
-    __tablename__ = 'CommunityPost'
-    __table_args__ = {'extend_existing=True'}
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    author = db.Column(db.String(100), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    with app.app_context():
+        if not os.path.exists(os.path.join(app.root_path, 'migrations')):
+            db.create_all()
+            init()
+            migrate_command(message='Initial migration')
+            upgrade()
 
-    def __repr__(self):
-        return f"CommunityPost('{self.title}', '{self.author}', '{self.date_posted}')"
+    # Register blueprints
+    from app.budget import budget_bp
+    from app.habit import habit_bp
+    from app.task import task_bp
+    from app.fitness import fitness_bp
+    from app.mood import mood_bp
+    from app.coding import coding_bp
+    from app.community import community_bp
+    from app.motivational import motivational_bp
+    from app.weather import weather_bp
 
-class Workout(db.Model):
-    __tablename__ = 'workout'
-    __table_args__ = {'extend_existing=True'}
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.String(200), nullable=True)
-    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    duration = db.Column(db.Integer, nullable=False)  # duration in minutes
+    app.register_blueprint(budget_bp, url_prefix='/budget')
+    app.register_blueprint(habit_bp, url_prefix='/habit')
+    app.register_blueprint(task_bp, url_prefix='/task')
+    app.register_blueprint(fitness_bp, url_prefix='/fitness')
+    app.register_blueprint(mood_bp, url_prefix='/mood')
+    app.register_blueprint(coding_bp, url_prefix='/coding')
+    app.register_blueprint(community_bp, url_prefix='/community')
+    app.register_blueprint(motivational_bp, url_prefix='/motivational')
+    app.register_blueprint(weather_bp, url_prefix='/weather')
 
-    def __repr__(self):
-        return f"Workout('{self.title}', '{self.date}', '{self.duration}')"
+    @app.route('/')
+    def index():
+        return render_template('index.html')
 
-class MotivationalQuote(db.Model):
-    __tablename__ = 'MotivationalQuote'
-    __table_args__ = {'extend_existing=True'}
-    id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.Text, nullable=False)
-    author = db.Column(db.String(100), nullable=False)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    def __repr__(self):
-        return f"MotivationalQuote('{self.author}', '{self.date_posted}')"
-
-
-class Habit(db.Model):
-    __tablename__ = 'habit'
-    __table_args__ = {'extend_existing=True'}
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.String(200), nullable=True)
-    creation_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    records = db.relationship('HabitRecord', backref='habit', lazy=True)
-    
-
-    def __repr__(self):
-        return f"Habit('{self.name}', '{self.creation_date}')"
-
-class HabitRecord(db.Model):
-    __tablename__ = 'habitRecord'
-    __table_args__ = {'extend_existing=True'}
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Date, nullable=False, default=datetime.utcnow)
-    status = db.Column(db.Boolean, nullable=False, default=False)
-    habit_id = db.Column(db.Integer, db.ForeignKey('habit.id'), nullable=False)
-
-    def __repr__(self):
-        return f"HabitRecord('{self.date}', '{self.status}')"
-
-
-# Add similar models for mood journal, coding journal, community board, motivational app, and weather app
+    return app
